@@ -46,8 +46,8 @@
             <artifactId>spring-security-oauth2-client</artifactId>
         </dependency>
 		<dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
 		<dependency>
@@ -76,6 +76,12 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.26</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 

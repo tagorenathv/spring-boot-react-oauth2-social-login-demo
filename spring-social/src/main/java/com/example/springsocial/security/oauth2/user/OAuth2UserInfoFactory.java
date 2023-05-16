@@ -2,12 +2,15 @@ package com.example.springsocial.security.oauth2.user;
 
 import com.example.springsocial.exception.OAuth2AuthenticationProcessingException;
 import com.example.springsocial.model.AuthProvider;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
+@Slf4j
 public class OAuth2UserInfoFactory {
 
     public static OAuth2UserInfo getOAuth2UserInfo(String registrationId, Map<String, Object> attributes) {
+      log.info("getOAuth2UserInfo");
         if(registrationId.equalsIgnoreCase(AuthProvider.google.toString())) {
             return new GoogleOAuth2UserInfo(attributes);
         } else if (registrationId.equalsIgnoreCase(AuthProvider.facebook.toString())) {

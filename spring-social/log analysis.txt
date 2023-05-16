@@ -1,0 +1,95 @@
+------------
+Logins
+------------
+
+# local user -> success
+2023-05-15 20:54:36.272  INFO 12888 --- [nio-8080-exec-4] c.e.s.s.TokenAuthenticationFilter        : doFilterInternal
+2023-05-15 20:54:36.272  INFO 12888 --- [nio-8080-exec-4] c.e.s.s.TokenAuthenticationFilter        : getJwtFromRequest
+2023-05-15 20:54:36.276  INFO 12888 --- [nio-8080-exec-4] c.e.s.security.CustomUserDetailsService  : loadUserById
+Hibernate: select user0_.id as id1_0_0_, user0_.email as email2_0_0_, user0_.email_verified as email_ve3_0_0_, user0_.image_url as image_ur4_0_0_, user0_.name as name5_0_0_, user0_.password as password6_0_0_, user0_.provider as provider7_0_0_, user0_.provider_id as provider8_0_0_ from users user0_ where user0_.id=?
+2023-05-15 20:54:36.280  INFO 12888 --- [nio-8080-exec-4] c.e.springsocial.security.UserPrincipal  : create
+2023-05-15 20:54:36.282  INFO 12888 --- [nio-8080-exec-4] c.e.s.security.CustomUserDetailsService  : loadUserByUsername
+Hibernate: select user0_.id as id1_0_, user0_.email as email2_0_, user0_.email_verified as email_ve3_0_, user0_.image_url as image_ur4_0_, user0_.name as name5_0_, user0_.password as password6_0_, user0_.provider as provider7_0_, user0_.provider_id as provider8_0_ from users user0_ where user0_.email=?
+2023-05-15 20:54:36.284  INFO 12888 --- [nio-8080-exec-4] c.e.springsocial.security.UserPrincipal  : create
+2023-05-15 20:54:36.342  INFO 12888 --- [nio-8080-exec-4] c.e.springsocial.security.TokenProvider  : at createToken: UsernamePasswordAuthenticationToken [Principal=com.example.springsocial.security.UserPrincipal@78492634, Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ROLE_USER]]
+
+
+
+# gmail user -> basic auth attempt -> failure
+2023-05-15 20:53:38.362  INFO 12888 --- [nio-8080-exec-2] c.e.s.s.TokenAuthenticationFilter        : doFilterInternal
+2023-05-15 20:53:38.362  INFO 12888 --- [nio-8080-exec-2] c.e.s.s.TokenAuthenticationFilter        : getJwtFromRequest
+2023-05-15 20:53:38.391  INFO 12888 --- [nio-8080-exec-2] c.e.s.security.CustomUserDetailsService  : loadUserById
+Hibernate: select user0_.id as id1_0_0_, user0_.email as email2_0_0_, user0_.email_verified as email_ve3_0_0_, user0_.image_url as image_ur4_0_0_, user0_.name as name5_0_0_, user0_.password as password6_0_0_, user0_.provider as provider7_0_0_, user0_.provider_id as provider8_0_0_ from users user0_ where user0_.id=?
+2023-05-15 20:53:38.411  INFO 12888 --- [nio-8080-exec-2] c.e.springsocial.security.UserPrincipal  : create
+2023-05-15 20:53:38.413  INFO 12888 --- [nio-8080-exec-2] c.e.s.security.CustomUserDetailsService  : loadUserByUsername
+Hibernate: select user0_.id as id1_0_, user0_.email as email2_0_, user0_.email_verified as email_ve3_0_, user0_.image_url as image_ur4_0_, user0_.name as name5_0_, user0_.password as password6_0_, user0_.provider as provider7_0_, user0_.provider_id as provider8_0_ from users user0_ where user0_.email=?
+2023-05-15 20:53:38.415  INFO 12888 --- [nio-8080-exec-2] c.e.springsocial.security.UserPrincipal  : create
+2023-05-15 20:53:38.415  WARN 12888 --- [nio-8080-exec-2] o.s.s.c.bcrypt.BCryptPasswordEncoder     : Empty encoded password
+2023-05-15 20:53:38.419 ERROR 12888 --- [nio-8080-exec-2] c.e.s.s.RestAuthenticationEntryPoint     : Responding with unauthorized error. Message - Bad credentials
+
+
+
+# gmail user -> success
+2023-05-15 20:54:54.244  INFO 12888 --- [nio-8080-exec-6] okieOAuth2AuthorizationRequestRepository : saveAuthorizationRequest
+2023-05-15 20:54:58.098  INFO 12888 --- [nio-8080-exec-9] okieOAuth2AuthorizationRequestRepository : removeAuthorizationRequest
+2023-05-15 20:54:58.099  INFO 12888 --- [nio-8080-exec-9] okieOAuth2AuthorizationRequestRepository : loadAuthorizationRequest
+2023-05-15 20:54:58.715  INFO 12888 --- [nio-8080-exec-9] c.e.s.s.oauth2.CustomOAuth2UserService   : loadUser
+2023-05-15 20:54:58.871  INFO 12888 --- [nio-8080-exec-9] c.e.s.s.oauth2.CustomOAuth2UserService   : processOAuth2User
+2023-05-15 20:54:58.872  INFO 12888 --- [nio-8080-exec-9] c.e.s.s.o.user.OAuth2UserInfoFactory     : getOAuth2UserInfo
+Hibernate: select user0_.id as id1_0_, user0_.email as email2_0_, user0_.email_verified as email_ve3_0_, user0_.image_url as image_ur4_0_, user0_.name as name5_0_, user0_.password as password6_0_, user0_.provider as provider7_0_, user0_.provider_id as provider8_0_ from users user0_ where user0_.email=?
+2023-05-15 20:54:58.894  INFO 12888 --- [nio-8080-exec-9] c.e.s.s.oauth2.CustomOAuth2UserService   : updateExistingUser
+Hibernate: select user0_.id as id1_0_0_, user0_.email as email2_0_0_, user0_.email_verified as email_ve3_0_0_, user0_.image_url as image_ur4_0_0_, user0_.name as name5_0_0_, user0_.password as password6_0_0_, user0_.provider as provider7_0_0_, user0_.provider_id as provider8_0_0_ from users user0_ where user0_.id=?
+2023-05-15 20:54:58.916  INFO 12888 --- [nio-8080-exec-9] c.e.springsocial.security.UserPrincipal  : create
+2023-05-15 20:54:58.918  INFO 12888 --- [nio-8080-exec-9] s.s.o.OAuth2AuthenticationSuccessHandler : onAuthenticationSuccess
+2023-05-15 20:54:58.918  INFO 12888 --- [nio-8080-exec-9] s.s.o.OAuth2AuthenticationSuccessHandler : determineTargetUrl
+2023-05-15 20:54:58.919  INFO 12888 --- [nio-8080-exec-9] s.s.o.OAuth2AuthenticationSuccessHandler : isAuthorizedRedirectUri
+2023-05-15 20:54:58.920  INFO 12888 --- [nio-8080-exec-9] c.e.springsocial.security.TokenProvider  : at createToken: OAuth2AuthenticationToken [Principal=com.example.springsocial.security.UserPrincipal@1899204b, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_USER]]
+2023-05-15 20:54:58.922  INFO 12888 --- [nio-8080-exec-9] s.s.o.OAuth2AuthenticationSuccessHandler : clearAuthenticationAttributes
+2023-05-15 20:54:58.922  INFO 12888 --- [nio-8080-exec-9] okieOAuth2AuthorizationRequestRepository : removeAuthorizationRequestCookies
+2023-05-15 20:54:59.256  INFO 12888 --- [io-8080-exec-10] c.e.s.s.TokenAuthenticationFilter        : doFilterInternal
+2023-05-15 20:54:59.256  INFO 12888 --- [io-8080-exec-10] c.e.s.s.TokenAuthenticationFilter        : getJwtFromRequest
+2023-05-15 20:54:59.260  INFO 12888 --- [io-8080-exec-10] c.e.s.security.CustomUserDetailsService  : loadUserById
+Hibernate: select user0_.id as id1_0_0_, user0_.email as email2_0_0_, user0_.email_verified as email_ve3_0_0_, user0_.image_url as image_ur4_0_0_, user0_.name as name5_0_0_, user0_.password as password6_0_0_, user0_.provider as provider7_0_0_, user0_.provider_id as provider8_0_0_ from users user0_ where user0_.id=?
+2023-05-15 20:54:59.262  INFO 12888 --- [io-8080-exec-10] c.e.springsocial.security.UserPrincipal  : create
+Hibernate: select user0_.id as id1_0_0_, user0_.email as email2_0_0_, user0_.email_verified as email_ve3_0_0_, user0_.image_url as image_ur4_0_0_, user0_.name as name5_0_0_, user0_.password as password6_0_0_, user0_.provider as provider7_0_0_, user0_.provider_id as provider8_0_0_ from users user0_ where user0_.id=?
+
+
+# gmail new user -> success
+2023-05-15 20:55:44.301  INFO 12888 --- [nio-8080-exec-6] okieOAuth2AuthorizationRequestRepository : saveAuthorizationRequest
+2023-05-15 20:55:47.389  INFO 12888 --- [nio-8080-exec-8] okieOAuth2AuthorizationRequestRepository : removeAuthorizationRequest
+2023-05-15 20:55:47.390  INFO 12888 --- [nio-8080-exec-8] okieOAuth2AuthorizationRequestRepository : loadAuthorizationRequest
+2023-05-15 20:55:47.657  INFO 12888 --- [nio-8080-exec-8] c.e.s.s.oauth2.CustomOAuth2UserService   : loadUser
+2023-05-15 20:55:47.767  INFO 12888 --- [nio-8080-exec-8] c.e.s.s.o.user.OAuth2UserInfoFactory     : getOAuth2UserInfo
+2023-05-15 20:55:47.767  INFO 12888 --- [nio-8080-exec-8] c.e.s.s.oauth2.CustomOAuth2UserService   : processOAuth2User
+Hibernate: select user0_.id as id1_0_, user0_.email as email2_0_, user0_.email_verified as email_ve3_0_, user0_.image_url as image_ur4_0_, user0_.name as name5_0_, user0_.password as password6_0_, user0_.provider as provider7_0_, user0_.provider_id as provider8_0_ from users user0_ where user0_.email=?
+2023-05-15 20:55:47.770  INFO 12888 --- [nio-8080-exec-8] c.e.s.s.oauth2.CustomOAuth2UserService   : registerNewUser
+Hibernate: insert into users (email, email_verified, image_url, name, password, provider, provider_id) values (?, ?, ?, ?, ?, ?, ?)
+2023-05-15 20:55:47.794  INFO 12888 --- [nio-8080-exec-8] c.e.springsocial.security.UserPrincipal  : create
+2023-05-15 20:55:47.795  INFO 12888 --- [nio-8080-exec-8] s.s.o.OAuth2AuthenticationSuccessHandler : onAuthenticationSuccess
+2023-05-15 20:55:47.795  INFO 12888 --- [nio-8080-exec-8] s.s.o.OAuth2AuthenticationSuccessHandler : determineTargetUrl
+2023-05-15 20:55:47.795  INFO 12888 --- [nio-8080-exec-8] s.s.o.OAuth2AuthenticationSuccessHandler : isAuthorizedRedirectUri
+2023-05-15 20:55:47.795  INFO 12888 --- [nio-8080-exec-8] c.e.springsocial.security.TokenProvider  : at createToken: OAuth2AuthenticationToken [Principal=com.example.springsocial.security.UserPrincipal@75609cfd, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_USER]]
+2023-05-15 20:55:47.796  INFO 12888 --- [nio-8080-exec-8] s.s.o.OAuth2AuthenticationSuccessHandler : clearAuthenticationAttributes
+2023-05-15 20:55:47.796  INFO 12888 --- [nio-8080-exec-8] okieOAuth2AuthorizationRequestRepository : removeAuthorizationRequestCookies
+
+
+-------
+Token hits
+-------
+
+# gmail user -> profile
+2023-05-15 20:56:26.329  INFO 12888 --- [nio-8080-exec-5] c.e.s.s.TokenAuthenticationFilter        : doFilterInternal
+2023-05-15 20:56:26.330  INFO 12888 --- [nio-8080-exec-5] c.e.s.s.TokenAuthenticationFilter        : getJwtFromRequest
+2023-05-15 20:56:26.335  INFO 12888 --- [nio-8080-exec-5] c.e.s.security.CustomUserDetailsService  : loadUserById
+Hibernate: select user0_.id as id1_0_0_, user0_.email as email2_0_0_, user0_.email_verified as email_ve3_0_0_, user0_.image_url as image_ur4_0_0_, user0_.name as name5_0_0_, user0_.password as password6_0_0_, user0_.provider as provider7_0_0_, user0_.provider_id as provider8_0_0_ from users user0_ where user0_.id=?
+2023-05-15 20:56:26.336  INFO 12888 --- [nio-8080-exec-5] c.e.springsocial.security.UserPrincipal  : create
+Hibernate: select user0_.id as id1_0_0_, user0_.email as email2_0_0_, user0_.email_verified as email_ve3_0_0_, user0_.image_url as image_ur4_0_0_, user0_.name as name5_0_0_, user0_.password as password6_0_0_, user0_.provider as provider7_0_0_, user0_.provider_id as provider8_0_0_ from users user0_ where user0_.id=?
+
+
+# local user -> profile
+2023-05-15 20:56:57.362  INFO 12888 --- [nio-8080-exec-9] c.e.s.s.TokenAuthenticationFilter        : doFilterInternal
+2023-05-15 20:56:57.362  INFO 12888 --- [nio-8080-exec-9] c.e.s.s.TokenAuthenticationFilter        : getJwtFromRequest
+2023-05-15 20:56:57.367  INFO 12888 --- [nio-8080-exec-9] c.e.s.security.CustomUserDetailsService  : loadUserById
+Hibernate: select user0_.id as id1_0_0_, user0_.email as email2_0_0_, user0_.email_verified as email_ve3_0_0_, user0_.image_url as image_ur4_0_0_, user0_.name as name5_0_0_, user0_.password as password6_0_0_, user0_.provider as provider7_0_0_, user0_.provider_id as provider8_0_0_ from users user0_ where user0_.id=?
+2023-05-15 20:56:57.369  INFO 12888 --- [nio-8080-exec-9] c.e.springsocial.security.UserPrincipal  : create
+Hibernate: select user0_.id as id1_0_0_, user0_.email as email2_0_0_, user0_.email_verified as email_ve3_0_0_, user0_.image_url as image_ur4_0_0_, user0_.name as name5_0_0_, user0_.password as password6_0_0_, user0_.provider as provider7_0_0_, user0_.provider_id as provider8_0_0_ from users user0_ where user0_.id=?

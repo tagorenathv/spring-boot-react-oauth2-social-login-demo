@@ -21,6 +21,7 @@ public class TokenProvider {
     }
 
     public String createToken(Authentication authentication) {
+        logger.info("at createToken: {}", authentication);
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
         Date now = new Date();
