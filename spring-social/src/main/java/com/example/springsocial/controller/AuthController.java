@@ -9,6 +9,7 @@ import com.example.springsocial.payload.LoginRequest;
 import com.example.springsocial.payload.SignUpRequest;
 import com.example.springsocial.repository.UserRepository;
 import com.example.springsocial.security.TokenProvider;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
 import java.net.URI;
 
 @RestController

@@ -2,17 +2,21 @@ package com.example.springsocial.security.oauth2;
 
 import com.example.springsocial.config.AppProperties;
 import com.example.springsocial.exception.BadRequestException;
+import com.example.springsocial.security.ClientUserAllowanceService;
 import com.example.springsocial.security.TokenProvider;
 import com.example.springsocial.util.CookieUtils;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
@@ -20,6 +24,7 @@ import java.util.Optional;
 import static com.example.springsocial.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 @Component
+@Slf4j
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private TokenProvider tokenProvider;
@@ -28,22 +33,37 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
+    private OAuth2AuthenticationFailureHandler failureHandler;
+
+    private ClientUserAllowanceService clientUserAllowanceService;
+
 
     @Autowired
     OAuth2AuthenticationSuccessHandler(TokenProvider tokenProvider, AppProperties appProperties,
-                                       HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository) {
+                                       HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository,
+                                       OAuth2AuthenticationFailureHandler failureHandler,
+                                       ClientUserAllowanceService allowanceService) {
         this.tokenProvider = tokenProvider;
         this.appProperties = appProperties;
         this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
+        this.failureHandler = failureHandler;
+        this.clientUserAllowanceService = allowanceService;
     }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        logger.info("onAuthenticationSuccess");
+        String client = Optional.ofNullable(request.getHeader("CLIENT")).orElse("ADMIN");
+        log.info("onAuthenticationSuccess: {}, client: {}", authentication.getName(), client);
+        if (authentication.isAuthenticated() && !clientUserAllowanceService.isUserAllowed(client, authentication.getName())) {
+            log.info("{} is not an allowed user for this client. Calling failureHandler.", authentication.getName());
+            failureHandler.onAuthenticationFailure(request, response, new UsernameNotFoundException("User not allowed for this client"));
+            return;
+        }
+
         String targetUrl = determineTargetUrl(request, response, authentication);
 
         if (response.isCommitted()) {
-            logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
+            log.debug("Response has already been committed. Unable to redirect to " + targetUrl);
             return;
         }
 
@@ -52,7 +72,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        logger.info("determineTargetUrl");
+        log.info("determineTargetUrl");
         Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
 
@@ -70,13 +90,13 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("clearAuthenticationAttributes");
+        log.info("clearAuthenticationAttributes");
         super.clearAuthenticationAttributes(request);
         httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
     }
 
     private boolean isAuthorizedRedirectUri(String uri) {
-        logger.info("isAuthorizedRedirectUri");
+        log.info("isAuthorizedRedirectUri");
         URI clientRedirectUri = URI.create(uri);
 
         return appProperties.getOauth2().getAuthorizedRedirectUris()
